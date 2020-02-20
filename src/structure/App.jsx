@@ -27,7 +27,7 @@ const setSearchTermAction = (term) => {
 const initialState = { term: "London" }
 const store = createStore(reducer, initialState)
 
-const extractTermFromState = (state) => {
+const mapStateToPropsWithTerm = (state) => {
   const {term} = state;
   return {term}
 }
@@ -66,10 +66,6 @@ const TableRow = ({data}) => {
 
 // PANELS
 //----------------
-function book_search_url(term){
-  return "http://openlibrary.org/query.json?type=/type/edition&limit=10&*=&title=" + encodeURIComponent(term)
-}
-
 class JsonFetcher extends React.Component {
   constructor(props) {
     super(props)
@@ -102,7 +98,11 @@ class JsonFetcher extends React.Component {
   }
 }
 
-const BooksDisplay = ({data}) => {
+function book_search_url(term){
+  return "http://openlibrary.org/query.json?type=/type/edition&limit=10&*=&title=" + encodeURIComponent(term)
+}
+
+const BooksTable = ({data}) => {
   if(!data) { return null }
 
   const book_rows = data.map(book => {
@@ -120,19 +120,19 @@ const BooksFromProp = ({term}) => {
 
   return (
     <Panel title="Books">
-      <JsonFetcher JsonDisplay={BooksDisplay} url={url} />
+      <JsonFetcher JsonDisplay={BooksTable} url={url} />
     </Panel>
   )
 }
 
-const Books = connect(extractTermFromState)(BooksFromProp)
+const BooksPanel = connect(mapStateToPropsWithTerm)(BooksFromProp)
 
 const location_search_url = (term) => {
   return "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=" +
     encodeURIComponent(term)
 }
 
-const LocationsDisplay = ({data}) => {
+const LocationsTable = ({data}) => {
   if(!data) { return null }
 
   const location_rows = data.map(
@@ -152,18 +152,18 @@ const LocationsFromProp = ({term}) => {
   const url = location_search_url(term)
   return (
     <Panel title="Locations">
-      <JsonFetcher JsonDisplay={LocationsDisplay} url={url} />
+      <JsonFetcher JsonDisplay={LocationsTable} url={url} />
     </Panel>
   )
 }
 
-const Locations = connect(extractTermFromState)(LocationsFromProp);
+const LocationsPanel = connect(mapStateToPropsWithTerm)(LocationsFromProp);
 
 const hn_search_url = (term) => {
   return "http://hn.algolia.com/api/v1/search?hitsPerPage=10&query=" + encodeURIComponent(term)
 }
 
-const HackerNewsDisplay = ({data}) => {
+const HackerNewsTable = ({data}) => {
   if (!data) { return null }
 
   const hn_links = data.hits.map(
@@ -192,17 +192,17 @@ const HackerNewsFromProps = ({term}) => {
   const url = hn_search_url(term)
 
   return <Panel title="Hacker News">
-    <JsonFetcher JsonDisplay={HackerNewsDisplay} url={url} />
+    <JsonFetcher JsonDisplay={HackerNewsTable} url={url} />
   </Panel>
 }
 
-const HackerNews = connect(extractTermFromState)(HackerNewsFromProps)
+const HackerNewsPanel = connect(mapStateToPropsWithTerm)(HackerNewsFromProps)
 
 const reddit_search_url = (term) => {
   return "https://api.reddit.com/api/subreddit_autocomplete_v2.json?limit=10&include_over_18=false&query=" + encodeURIComponent(term)
 }
 
-const RedditDisplay = ({data}) => {
+const RedditTable = ({data}) => {
   if (!data) { return null }
 
   const reddit_links = data.data.children.map(
@@ -223,12 +223,12 @@ const RedditFromProps = ({term}) => {
 
   return (
     <Panel title="Reddit">
-      <JsonFetcher JsonDisplay={RedditDisplay} url={url} />
+      <JsonFetcher JsonDisplay={RedditTable} url={url} />
     </Panel>
   )
 }
 
-const Reddit = connect(extractTermFromState)(RedditFromProps)
+const RedditPanel = connect(mapStateToPropsWithTerm)(RedditFromProps)
 
 // SEARCH INPUT COMPONENT
 //-----------------------
@@ -272,18 +272,18 @@ const App = () => {
         </div>
         <div className="row">
           <div className="col-lg-6 col-md-12">
-            <Reddit />
+            <RedditPanel />
           </div>
           <div className="col-lg-6 col-md-12">
-            <HackerNews />
+            <HackerNewsPanel />
           </div>
         </div>
         <div className="row">
           <div className="col-lg-6 col-md-12">
-            <Locations />
+            <LocationsPanel />
           </div>
           <div className="col-lg-6 col-md-12">
-            <Books />
+            <BooksPanel />
           </div>
         </div>
       </div>
