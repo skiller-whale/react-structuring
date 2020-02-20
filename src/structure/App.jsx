@@ -27,7 +27,7 @@ const setSearchTermAction = (term) => {
 const initialState = { term: "London" }
 const store = createStore(reducer, initialState)
 
-const extractTermFromState = (state) => {
+const mapStateToPropsWithTerm = (state) => {
   const {term} = state;
   return {term}
 }
@@ -125,7 +125,7 @@ const BooksFromProp = ({term}) => {
   )
 }
 
-const Books = connect(extractTermFromState)(BooksFromProp)
+const Books = connect(mapStateToPropsWithTerm)(BooksFromProp)
 
 const location_search_url = (term) => {
   return "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=" +
@@ -157,7 +157,7 @@ const LocationsFromProp = ({term}) => {
   )
 }
 
-const Locations = connect(extractTermFromState)(LocationsFromProp);
+const Locations = connect(mapStateToPropsWithTerm)(LocationsFromProp);
 
 const hn_search_url = (term) => {
   return "http://hn.algolia.com/api/v1/search?hitsPerPage=10&query=" + encodeURIComponent(term)
@@ -196,7 +196,7 @@ const HackerNewsFromProps = ({term}) => {
   </Panel>
 }
 
-const HackerNews = connect(extractTermFromState)(HackerNewsFromProps)
+const HackerNews = connect(mapStateToPropsWithTerm)(HackerNewsFromProps)
 
 const reddit_search_url = (term) => {
   return "https://api.reddit.com/api/subreddit_autocomplete_v2.json?limit=10&include_over_18=false&query=" + encodeURIComponent(term)
@@ -228,7 +228,7 @@ const RedditFromProps = ({term}) => {
   )
 }
 
-const Reddit = connect(extractTermFromState)(RedditFromProps)
+const Reddit = connect(mapStateToPropsWithTerm)(RedditFromProps)
 
 // SEARCH INPUT COMPONENT
 //-----------------------
