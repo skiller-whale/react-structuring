@@ -291,4 +291,5 @@ const App = () => {
   )
 }
 
+export {Panel}
 export default App

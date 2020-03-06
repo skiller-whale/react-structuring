@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Panel renders heading and children correctly 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h3
+      className="panel-title"
+    />
+  </div>
+  <span>
+    Some content
+  </span>
+  <img
+    src="some_image.jpg"
+  />
+</div>
+`;
