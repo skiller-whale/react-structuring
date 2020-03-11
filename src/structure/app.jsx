@@ -127,38 +127,6 @@ const BooksFromProp = ({term}) => {
 
 const BooksPanel = connect(mapStateToPropsWithTerm)(BooksFromProp)
 
-const location_search_url = (term) => {
-  return "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=" +
-    encodeURIComponent(term)
-}
-
-const LocationsTable = ({data}) => {
-  if(!data) { return null }
-
-  const location_rows = data.map(
-    ({ place_id, display_name, lat, lon }) => {
-      return (
-        <TableRow key={place_id} data={[display_name, `${lat},${lon}`]} />
-      )
-    }
-  )
-
-  return (
-    <Table>{location_rows}</Table>
-  )
-}
-
-const LocationsFromProp = ({term}) => {
-  const url = location_search_url(term)
-  return (
-    <Panel title="Locations">
-      <JsonFetcher JsonDisplay={LocationsTable} url={url} />
-    </Panel>
-  )
-}
-
-const LocationsPanel = connect(mapStateToPropsWithTerm)(LocationsFromProp);
-
 const hn_search_url = (term) => {
   return "http://hn.algolia.com/api/v1/search?hitsPerPage=10&query=" + encodeURIComponent(term)
 }
@@ -197,38 +165,6 @@ const HackerNewsFromProps = ({term}) => {
 }
 
 const HackerNewsPanel = connect(mapStateToPropsWithTerm)(HackerNewsFromProps)
-
-const reddit_search_url = (term) => {
-  return "https://api.reddit.com/api/subreddit_autocomplete_v2.json?limit=10&include_over_18=false&query=" + encodeURIComponent(term)
-}
-
-const RedditTable = ({data}) => {
-  if (!data) { return null }
-
-  const reddit_links = data.data.children.map(
-    ({ data: { id, title, url, created, subscribers } }) => {
-      const date = new Date(1000 * created) // Convert seconds to milliseconds
-      const link = <a href={"https://reddit.com" + url}>{title}</a>
-
-      return <TableRow key={id} data={[date.toLocaleDateString(), subscribers, link]} />
-    })
-
-  return <Table>
-    {reddit_links}
-  </Table>
-}
-
-const RedditFromProps = ({term}) => {
-  const url = "https://api.reddit.com/api/subreddit_autocomplete_v2.json?limit=10&include_over_18=false&query=" + encodeURIComponent(term)
-
-  return (
-    <Panel title="Reddit">
-      <JsonFetcher JsonDisplay={RedditTable} url={url} />
-    </Panel>
-  )
-}
-
-const RedditPanel = connect(mapStateToPropsWithTerm)(RedditFromProps)
 
 // SEARCH INPUT COMPONENT
 //-----------------------
@@ -272,15 +208,7 @@ const App = () => {
         </div>
         <div className="row">
           <div className="col-lg-6 col-md-12">
-            <RedditPanel />
-          </div>
-          <div className="col-lg-6 col-md-12">
             <HackerNewsPanel />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-lg-6 col-md-12">
-            <LocationsPanel />
           </div>
           <div className="col-lg-6 col-md-12">
             <BooksPanel />
