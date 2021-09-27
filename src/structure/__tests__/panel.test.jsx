@@ -1,5 +1,5 @@
 import React from 'react'
-import {Panel} from '../App'
+import Panel from 'structure/panel'
 import renderer from 'react-test-renderer'
 
 test('Panel renders heading and children correctly', () => {
